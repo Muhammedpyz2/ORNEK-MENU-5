@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Şifa Konağı - Lezzet Durağınız</title>
+    <meta name="description" content="Geleneksel ev yemekleri, paça ve çorba çeşitlerimizle hizmetinizdeyiz. Şifa Konağı'nın eşsiz lezzet menüsünü keşfedin.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;700&family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome (İkonlar için) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+
+    <style>
+        /* CSS KODLARI BURADA BAŞLIYOR */
+
+        /* ------------------------------------------- */
+        /* 1. KÖK DEĞİŞKENLER VE GENEL SIFIRLAMALAR     */
+        /* ------------------------------------------- */
+        :root {
+            --primary-color: #c5a075;   /* Altın kahve */
+            --secondary-color: #3d3d3d; /* Koyu gri */
+            --background-color: #fdfaf6;/* Çok açık krem */
+            --text-color: #555;
+            --white-color: #ffffff;
+            --dark-overlay-color: rgba(40, 40, 40, 0.85); /* Arka plan için daha koyu overlay */
+            --font-heading: 'Lora', serif;
+            --font-body: 'Poppins', sans-serif;
+            --header-height: 5rem; /* Header yüksekliği için değişken */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-image: 
+                linear-gradient(var(--dark-overlay-color), var(--dark-overlay-color)),
+                url('https://images.pexels.com/photos/220201/pexels-photo-220201.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            color: var(--text-color);
+            overflow-x: hidden;
+            transition: background-color 0.4s;
+        }
+
+        /* YENİ: Mobil menü açıkken body kaydırmasını engelle */
+        body.no-scroll {
+            overflow: hidden;
+        }
+
+        /* ------------------------------------------- */
+        /* 2. HEADER VE NAVİGASYON                     */
+        /* ------------------------------------------- */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: var(--header-height);
+            padding: 0 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: height 0.3s ease, background-color 0.3s ease;
+        }
+
+        .logo {
+            font-family: var(--font-heading);
+            font-size: 1.8rem;
+            color: var(--secondary-color);
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .navbar {
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar a {
+            margin-left: 2.5rem;
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+            font-size: 1rem;
+            position: relative;
+            transition: color 0.3s;
+        }
+
+        .navbar a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background-color: var(--primary-color);
+            transition: width 0.4s ease;
+        }
+
+        .navbar a:hover, .navbar a.active { 
+            color: var(--primary-color); 
+        }
+
+        .navbar a:hover::after, .navbar a.active::after { 
+            width: 100%; 
+        }
+
+        /* YENİ: BURGER MENÜ İKONU */
+        .burger-menu {
+            width: 40px;
+            height: 40px;
+            display: none; /* Masaüstünde gizli */
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            background: transparent;
+            border: none;
+            z-index: 1001; /* Navbar'ın üzerinde kalmalı */
+        }
+
+        .burger-menu span {
+            display: block;
+            width: 28px;
+            height: 3px;
+            background-color: var(--secondary-color);
+            margin: 4px 0;
+            border-radius: 3px;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        /* YENİ: Burger menü "X" olma animasyonu */
+        .burger-menu.active span:nth-child(1) {
+            transform: rotate(45deg) translate(8px, 7px);
+        }
+        .burger-menu.active span:nth-child(2) {
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+        .burger-menu.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(8px, -7px);
+        }
+
+        /* ------------------------------------------- */
+        /* 3. ANA BÖLÜMLER (HERO, CONTENT-CARD)        */
+        /* ------------------------------------------- */
+        #hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: var(--white-color);
+            padding: 0 7%;
+        }
+
+        .hero-text {
+            animation: fadeIn 1.2s 0.5s ease-out forwards;
+            opacity: 0;
+        }
+
+        .hero-text h1 {
+            font-family: var(--font-heading);
+            font-size: 4.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 3px 3px 15px rgba(0,0,0,0.6);
+        }
+
+        .hero-text p {
+            font-size: 1.5rem;
+            margin-bottom: 2.5rem;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.6);
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background: var(--primary-color);
+            color: var(--white-color);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 500;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .btn:hover { 
+            transform: translateY(-3px); 
+            box-shadow: 0 6px 20px rgba(0,0,0,0.25); 
+        }
+        
+        .content-card {
+            padding: 6rem 7%;
+            background-color: var(--white-color);
+            margin: 0 5%; /* Üstten boşluk kaldırıldı, body arka planı görünsün */
+            border-radius: 15px;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.12);
+        }
+        /* Kartların arasını açmak için */
+        #menu { margin-top: 5rem; }
+        #about { margin-top: 5rem; margin-bottom: 5rem; }
+
+        .section-title {
+            text-align: center;
+            font-family: var(--font-heading);
+            font-size: 3rem;
+            color: var(--secondary-color);
+            margin-bottom: 3.5rem;
+        }
+
+        /* ------------------------------------------- */
+        /* 4. MENÜ BÖLÜMÜ STİLLERİ                     */
+        /* ------------------------------------------- */
+        #menu-filters {
+            display: flex;
+            justify-content: center;
+            gap: 1.2rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+        .filter-btn { 
+            padding: 0.7rem 1.8rem; 
+            border: 2px solid var(--primary-color); 
+            background: transparent; 
+            color: var(--primary-color); 
+            border-radius: 50px; 
+            cursor: pointer; 
+            font-weight: 500; 
+            transition: all 0.3s ease; 
+        }
+        .filter-btn:hover, .filter-btn.active { 
+            background: var(--primary-color); 
+            color: var(--white-color); 
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(197, 160, 117, 0.4);
+        }
+
+        #menu-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); 
+            gap: 2rem; 
+        }
+
+        .menu-item { 
+            display: flex; 
+            align-items: center; 
+            padding: 1rem; 
+            background: var(--background-color); 
+            border-left: 5px solid transparent;
+            border-radius: 10px; 
+            transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s; 
+            opacity: 0; 
+            transform: translateY(20px); 
+        }
+        .menu-item.visible { 
+            animation: fadeInUp 0.6s ease-out forwards; 
+        }
+        .menu-item:hover { 
+            transform: translateY(-5px); 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1); 
+            border-left-color: var(--primary-color);
+        }
+        
+        .item-image { 
+            width: 90px; height: 90px; 
+            border-radius: 50%; 
+            object-fit: cover; 
+            margin-right: 1.5rem; 
+            flex-shrink: 0; 
+            border: 3px solid var(--white-color);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .item-info { flex-grow: 1; }
+        .item-info h3 { 
+            font-family: var(--font-body); 
+            font-size: 1.25rem; 
+            font-weight: 700; 
+            color: var(--secondary-color); 
+        }
+        .item-info p { font-size: 0.9rem; color: var(--text-color); margin-top: 0.25rem; }
+        .item-price { 
+            font-size: 1.4rem; 
+            font-weight: 700; 
+            color: var(--primary-color); 
+            white-space: nowrap; 
+            padding-left: 1rem; 
+        }
+        
+        /* ------------------------------------------- */
+        /* 5. DİĞER BÖLÜMLER (HAKKIMIZDA, FOOTER)      */
+        /* ------------------------------------------- */
+        .about-container { 
+            max-width: 800px; 
+            margin: 0 auto; 
+            text-align: center; 
+        }
+        .about-container p { font-size: 1.1rem; line-height: 1.8; }
+        
+        .footer { 
+            background: var(--secondary-color); 
+            color: var(--white-color); 
+            text-align: center; 
+            padding: 4rem 7% 2.5rem 7%; 
+        }
+        .social-links { margin-bottom: 2rem; }
+        .social-links a { 
+            color: var(--white-color); 
+            font-size: 1.6rem; 
+            margin: 0 1rem; 
+            transition: color 0.3s, transform 0.3s;
+            display: inline-block;
+        }
+        .social-links a:hover { 
+            color: var(--primary-color);
+            transform: translateY(-3px);
+        }
+        .copyright { font-size: 0.9rem; color: #ccc; }
+        
+        /* YUKARI ÇIK BUTONU */
+        #scrollTopBtn { 
+            position: fixed; 
+            bottom: 2rem; 
+            right: 2rem; 
+            width: 50px; 
+            height: 50px; 
+            background: var(--primary-color); 
+            color: var(--white-color); 
+            border-radius: 50%; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            font-size: 1.5rem; 
+            text-decoration: none; 
+            opacity: 0; 
+            visibility: hidden; 
+            transition: opacity 0.4s, visibility 0.4s, transform 0.4s; 
+            transform: translateY(20px); 
+            z-index: 999; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        #scrollTopBtn.show { 
+            opacity: 1; 
+            visibility: visible; 
+            transform: translateY(0); 
+        }
+        #scrollTopBtn:hover {
+             transform: scale(1.1);
+        }
+
+        /* ------------------------------------------- */
+        /* 6. ANİMASYONLAR                             */
+        /* ------------------------------------------- */
+        @keyframes fadeIn { 
+            to { opacity: 1; } 
+        }
+        @keyframes fadeInUp { 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+
+        /* ------------------------------------------- */
+        /* 7. MOBİL UYUMLULUK (RESPONSIVE)             */
+        /* ------------------------------------------- */
+        @media (max-width: 992px) {
+            html { font-size: 15px; }
+            .header { padding: 0 4%; }
+            .content-card { margin: 0 2%; padding: 4rem 4%; }
+            #menu { margin-top: 4rem; }
+            #about { margin-top: 4rem; margin-bottom: 4rem; }
+
+            /* YENİ: Mobil Navigasyon Aktifleşiyor */
+            .burger-menu {
+                display: flex; /* Burger menüyü görünür yap */
+            }
+
+            .navbar {
+                position: fixed;
+                top: 0;
+                right: -100%; /* Başlangıçta ekranın dışında */
+                width: 100%;
+                height: 100vh;
+                background-color: rgba(25, 25, 25, 0.98); /* Koyu, yarı saydam arka plan */
+                backdrop-filter: blur(5px);
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                transition: right 0.6s cubic-bezier(0.77, 0, 0.175, 1);
+            }
+
+            .navbar.active {
+                right: 0; /* Ekrana kayarak gelir */
+            }
+
+            .navbar a {
+                margin: 2rem 0;
+                font-size: 2rem; /* Mobil menüde linkler daha büyük */
+                color: var(--white-color);
+                opacity: 0;
+                transform: translateY(20px);
+                transition: color 0.3s, opacity 0.5s, transform 0.5s;
+            }
+            
+            /* Mobil menü açıldığında linklerin animasyonla gelmesi */
+            .navbar.active a {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            .navbar.active a:nth-child(1) { transition-delay: 0.2s; }
+            .navbar.active a:nth-child(2) { transition-delay: 0.3s; }
+            .navbar.active a:nth-child(3) { transition-delay: 0.4s; }
+
+            .navbar a::after {
+                background-color: var(--primary-color);
+                bottom: -8px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            html { font-size: 14px; }
+            .hero-text h1 { font-size: 3.5rem; }
+            .hero-text p { font-size: 1.3rem; }
+            #menu-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 480px) {
+            .menu-item { 
+                flex-direction: column; 
+                align-items: center; 
+                text-align: center; 
+            }
+            .item-image { 
+                width: 120px; 
+                height: 120px; 
+                margin-right: 0; 
+                margin-bottom: 1.5rem; 
+            }
+            .item-info { width: 100%; }
+            .item-price { 
+                margin-top: 1rem; 
+                padding-left: 0; 
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <a href="#" class="logo">Şifa Konağı</a>
+        
+        <!-- YENİ: Burger menü butonu HTML'e eklendi -->
+        <button class="burger-menu" id="burger-menu" aria-label="Menüyü aç/kapat">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <nav class="navbar" id="navbar">
+            <a href="#hero" class="active">Anasayfa</a>
+            <a href="#menu">Menü</a>
+            <a href="#about">Hakkımızda</a>
+        </nav>
+    </header>
+
+    <section id="hero">
+        <div class="hero-text">
+            <h1>Anne Eli Değmiş Gibi</h1>
+            <p>Geleneksel lezzetlerin ve şifanın buluştuğu eşsiz adres</p>
+            <a href="#menu" class="btn">Menümüzü Keşfedin</a>
+        </div>
+    </section>
+
+    <main id="menu" class="content-card">
+        <h2 class="section-title">Lezzet Menümüz</h2>
+        
+        <div id="menu-filters">
+            <button class="filter-btn active" data-category="tumu">Tümü</button>
+            <button class="filter-btn" data-category="corba">Çorbalar</button>
+            <button class="filter-btn" data-category="paca">Paça Çeşitleri</button>
+            <button class="filter-btn" data-category="ev-yemegi">Ev Yemekleri</button>
+            <button class="filter-btn" data-category="tatli">Tatlılar</button>
+        </div>
+
+        <div id="menu-grid">
+            <div class="menu-item" data-category="corba">
+                <img src="https://placehold.co/120x120/c5a075/FFF?text=Mercimek" alt="Mercimek Çorbası" class="item-image">
+                <div class="item-info"><h3>Mercimek Çorbası</h3><p>Tereyağlı, naneli sos ile</p></div><div class="item-price">45₺</div>
+            </div>
+            <div class="menu-item" data-category="corba">
+                <img src="https://placehold.co/120x120/c5a075/FFF?text=Ezogelin" alt="Ezogelin Çorbası" class="item-image">
+                <div class="item-info"><h3>Ezogelin Çorbası</h3><p>Acılı veya acısız</p></div><div class="item-price">45₺</div>
+            </div>
+            <div class="menu-item" data-category="paca">
+                <img src="https://placehold.co/120x120/c5a075/FFF?text=Paça" alt="Kelle Paça" class="item-image">
+                <div class="item-info"><h3>Kelle Paça (Beyinli)</h3><p>Limon ve taze maydanoz ile</p></div><div class="item-price">110₺</div>
+            </div>
+            <div class="menu-item" data-category="paca">
+                <img src="https://placehold.co/120x120/c5a075/FFF?text=Tuzlama" alt="Damardan Tuzlama" class="item-image">
+                <div class="item-info"><h3>Damardan Tuzlama</h3><p>Gurmeler için özel</p></div><div class="item-price">120₺</div>
+            </div>
+            <div class="menu-item" data-category="ev-yemegi">
+                <img src="https://placehold.co/120x120/c5a075/FFF?text=Fasulye" alt="Kuru Fasulye" class="item-image">
+                <div class="item-info"><h3>Kuru Fasulye (Etli)</h3><p>Pirinç pilavı ve turşu ile</p></div><div class="item-price">90₺</div>
+            </div>
+            <div class="menu-item" data-category="ev-yemegi">
+                <img src="https://placehold.co/120x120/c5a075/FFF?text=Tas+Kebabı" alt="Tas Kebabı" class="item-image">
+                <div class="item-info"><h3>Tas Kebabı</h3><p>Dana etinden, lokum gibi</p></div><div class="item-price">125₺</div>
+            </div>
+            <div class="menu-item" data-category="tatli">
+                <img src="https://placehold.co/120x120/c5a075/FFF?text=Sütlaç" alt="Fırın Sütlaç" class="item-image">
+                <div class="item-info"><h3>Fırın Sütlaç</h3><p>Fındık parçacıkları ile</p></div><div class="item-price">55₺</div>
+            </div>
+        </div>
+    </main>
+
+    <section id="about" class="content-card">
+        <div class="about-container">
+            <h2 class="section-title">Bizim Hikayemiz</h2>
+            <p>Şifa Konağı olarak yıllardır en taze malzemelerle, geleneksel tariflere sadık kalarak hizmet veriyoruz. Amacımız, her misafirimize anne evinin sıcaklığını ve lezzetini hissettirmektir. Çorbalarımız ve paça çeşitlerimiz, ustalarımızın gizli tarifleriyle hazırlanır ve birer şifa kaynağıdır.</p>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="social-links">
+            <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" aria-label="Whatsapp"><i class="fab fa-whatsapp"></i></a>
+        </div>
+        <p class="copyright">© 2023 Şifa Konağı. Tüm Hakları Saklıdır.</p>
+    </footer>
+    
+    <a href="#" id="scrollTopBtn" aria-label="Sayfanın başına git"><i class="fas fa-arrow-up"></i></a>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+        const burgerMenu = document.getElementById('burger-menu');
+        const navbar = document.getElementById('navbar');
+        const navLinks = document.querySelectorAll('.navbar a');
+        const header = document.querySelector('.header');
+
+        // --- YENİ: BURGER MENÜ KONTROLÜ ---
+        const toggleMenu = () => {
+            burgerMenu.classList.toggle('active');
+            navbar.classList.toggle('active');
+            document.body.classList.toggle('no-scroll');
+        };
+
+        burgerMenu.addEventListener('click', toggleMenu);
+
+        // YENİ: Mobil menüdeki bir linke tıklayınca menüyü kapat
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (navbar.classList.contains('active')) {
+                    toggleMenu();
+                }
+            });
+        });
+
+        // --- MENÜ FİLTRELEME SİSTEMİ ---
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const menuItems = document.querySelectorAll('.menu-item');
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelector('.filter-btn.active').classList.remove('active');
+                btn.classList.add('active');
+                const category = btn.getAttribute('data-category');
+
+                menuItems.forEach(item => {
+                    const itemCategory = item.getAttribute('data-category');
+                    const shouldShow = category === 'tumu' || itemCategory === category;
+                    
+                    // Önce animasyon class'ını kaldır
+                    item.classList.remove('visible');
+
+                    if (shouldShow) {
+                        // Önce display'i değiştir, sonra animasyonu tetikle
+                        item.style.display = 'flex';
+                        setTimeout(() => {
+                           item.classList.add('visible');
+                        }, 20); // küçük bir gecikme
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+        });
+        
+        // Başlangıçta tüm menü elemanlarını görünür yap
+        menuItems.forEach(item => item.classList.add('visible'));
+
+        // --- KAYDIRDIKÇA GÖRÜNEN ANİMASYONLAR (INTERSECTION OBSERVER) ---
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    // Bir kez göründükten sonra tekrar izlemeyi bırakabiliriz (isteğe bağlı)
+                    // observer.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.1 // Elemanın %10'u görününce tetiklenir
+        });
+
+        // NOT: Başlangıçta tüm menü elemanları zaten görünür olduğu için,
+        // observer'ı diğer potansiyel animasyonlu elemanlar için saklayabiliriz.
+        // Şu anki kurguda menü için observer'a gerek kalmadı ama kod hazırda bulunsun.
+        // document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
+        
+        // --- YUKARI ÇIK BUTONU ---
+        const scrollTopBtn = document.getElementById('scrollTopBtn');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollTopBtn.classList.add('show');
+            } else {
+                scrollTopBtn.classList.remove('show');
+            }
+        });
+
+        // --- NAVBAR'DAKİ AKTİF LİNKİ GÜNCELLEME (SCROLLSPY) ---
+        const sections = document.querySelectorAll('section[id], main[id]');
+        const headerHeight = header.offsetHeight;
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (window.pageYOffset >= sectionTop - headerHeight - 50) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').includes(current)) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+    });
+    </script>
+</body>
+</html>
